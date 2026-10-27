@@ -1,19 +1,27 @@
-
 package tw.edu.pu.csim.tclieray.basicui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import tw.edu.pu.csim.tclieray.basicui.ui.theme.BasicUITheme
 
 class MainActivity : ComponentActivity() {
@@ -50,11 +61,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
-        // 顯示可滑動列表
-        LazyColumnExample()
 
-        // 顯示背景、文字與手勢偵測
-        ColumnExample()
+        LazyColumnExample(modifier)
+
+        ColumnExample(modifier)
+
+
+        RowExample(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 150.dp)
+        )
+
+
+        AnimalRowExample(
+            modifier = Modifier.align(Alignment.Center)
+        )
+
+        TextFieldExample(modifier)
     }
 }
 
@@ -108,5 +132,88 @@ fun ColumnExample(modifier: Modifier = Modifier) {
 fun MainPreview() {
     BasicUITheme {
         Main()
+    }
+}
+
+@Composable
+fun RowExample(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.android),
+            contentDescription = "Android icon",
+            modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape)
+                .background(Color.Yellow),
+            alpha = 0.6f,
+        )
+
+        Spacer(modifier = Modifier.width(20.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.compose),
+            contentDescription = "Compose icon",
+            modifier = Modifier.size(100.dp)
+        )
+    }
+}
+
+@Composable
+fun AnimalRowExample(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.animal1),
+            contentDescription = "Animal 1",
+            modifier = Modifier.size(80.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.animal2),
+            contentDescription = "Animal 2",
+            modifier = Modifier.size(80.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Image(
+            painter = painterResource(id = R.drawable.animal3),
+            contentDescription = "Animal 3",
+            modifier = Modifier.size(80.dp)
+        )
+    }
+}
+
+@Composable
+fun TextFieldExample(modifier: Modifier = Modifier) {
+    var inputText by remember { mutableStateOf("") }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
+        OutlinedTextField(
+            value = inputText,
+            onValueChange = { inputText = it },
+            label = { Text("請輸入文字") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(0.8f)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = if (inputText.isBlank()) "尚未輸入內容" else "您輸入的是：$inputText"
+        )
     }
 }
